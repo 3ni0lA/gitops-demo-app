@@ -15,6 +15,13 @@ spec:
     spec:
       containers:
       - name: demo-app
-        image: nginx:1.25.3 # ← you'll change this version later for the money shot
+        image: nginx:1.25.0 # ← you'll change this version later for the money shot
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
