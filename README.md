@@ -89,7 +89,7 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
-Watch pods come up — wait until all show `Running`:
+Watch pods come up, wait until all show `Running`:
 
 ```bash
 kubectl get pods -n argocd -w
@@ -157,7 +157,7 @@ argocd login localhost:8080 --username admin --insecure
 
 ### 5. Fork or clone this repo
 
-This repo contains the Kubernetes manifests ArgoCD watches. The `k8s/` folder is the desired state — what ArgoCD will make your cluster match.
+This repo contains the Kubernetes manifests ArgoCD watches. The `k8s/` folder is the desired state, what ArgoCD will make your cluster match.
 
 ```
 gitops-demo-app/
@@ -166,7 +166,7 @@ gitops-demo-app/
     └── service.yaml      ← ClusterIP service
 ```
 
-> **Why a pinned image tag matters:** Never use `latest` in GitOps. If you do, the cluster and repo always "match" , ArgoCD can never detect drift because the tag never changes. Always pin versions.
+> **Why a pinned image tag matters:** Never use `latest` in GitOps. If you do, the cluster and repo always "match", ArgoCD can never detect drift because the tag never changes. Always pin versions.
 
 ---
 
@@ -201,8 +201,8 @@ spec:
 
 **Key fields:**
 
-- `prune: true` — if you delete a manifest from Git, ArgoCD removes the resource from the cluster. Without this, deleted files leave orphaned resources behind.
-- `selfHeal: true` — if anyone runs `kubectl` manually and changes something, ArgoCD detects the drift and reverts it. Git is the only authority.
+- `prune: true` - if you delete a manifest from Git, ArgoCD removes the resource from the cluster. Without this, deleted files leave orphaned resources behind.
+- `selfHeal: true` - if anyone runs `kubectl` manually and changes something, ArgoCD detects the drift and reverts it. Git is the only authority.
 
 After applying, open the ArgoCD UI. You should see `demo-app` appear, turn green, and show `Synced`.
 
@@ -240,7 +240,7 @@ Old pods terminate, new ones start , triggered entirely by a Git commit.
 
 ---
 
-### Demo 2 — Self-healing (proves Git is the only authority)
+### Demo 2 - Self-healing (proves Git is the only authority)
 
 Manually scale the deployment outside of Git:
 
@@ -321,7 +321,7 @@ kubectl rollout restart deployment coredns -n kube-system
 
 ---
 
-### Error 3 — Port-forward drops silently
+### Error 3 - Port-forward drops silently
 
 **Symptom:**  
 `curl: (7) Failed to connect to localhost port 8080` - the ArgoCD UI becomes unreachable mid-session.
