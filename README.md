@@ -1,4 +1,4 @@
-# GitOps Demo — ArgoCD on Kind
+# GitOps Demo - ArgoCD on Kind
 
 A working GitOps pipeline where a Git commit is the **only** deployment mechanism.  
 No `kubectl apply`. No CI pipeline pushing to the cluster. The cluster watches Git and pulls.
@@ -7,11 +7,11 @@ No `kubectl apply`. No CI pipeline pushing to the cluster. The cluster watches G
 
 ## What This Proves
 
-Most engineers understand CI/CD. Fewer understand GitOps — and hiring managers know the difference.
+Most engineers understand CI/CD. Fewer understand GitOps and hiring managers know the difference.
 
 **CI/CD (push model):** A pipeline builds your code and *pushes* changes to the cluster. The pipeline holds the keys.
 
-**GitOps (pull model):** A controller *inside* the cluster watches a Git repo and pulls changes in. Git is the single source of truth. If the cluster drifts from what Git says, the controller corrects it automatically — no human intervention.
+**GitOps (pull model):** A controller *inside* the cluster watches a Git repo and pulls changes in. Git is the single source of truth. If the cluster drifts from what Git says, the controller corrects it automatically, no human intervention.
 
 This project demonstrates that model end-to-end.
 
@@ -99,7 +99,7 @@ kubectl get pods -n argocd -w
 
 | Pod | Role |
 |-----|------|
-| `argocd-application-controller` | The GitOps brain — compares Git state to cluster state |
+| `argocd-application-controller` | The GitOps brain compares Git state to cluster state |
 | `argocd-repo-server` | Clones and reads your Git repo |
 | `argocd-server` | Serves the UI and API |
 | `argocd-redis` | Caches state between components |
@@ -113,7 +113,7 @@ kubectl get pods -n argocd -w
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
-Keep this terminal open — the tunnel stays alive as long as the command runs. Open `https://localhost:8080` in your browser and proceed past the TLS warning (self-signed cert).
+Keep this terminal open, the tunnel stays alive as long as the command runs. Open `https://localhost:8080` in your browser and proceed past the TLS warning (self-signed cert).
 
 **Tip:** Run the port-forward in a persistent tmux session so it doesn't drop when you switch terminals:
 
@@ -166,7 +166,7 @@ gitops-demo-app/
     └── service.yaml      ← ClusterIP service
 ```
 
-> **Why a pinned image tag matters:** Never use `latest` in GitOps. If you do, the cluster and repo always "match" — ArgoCD can never detect drift because the tag never changes. Always pin versions.
+> **Why a pinned image tag matters:** Never use `latest` in GitOps. If you do, the cluster and repo always "match" , ArgoCD can never detect drift because the tag never changes. Always pin versions.
 
 ---
 
@@ -210,7 +210,7 @@ After applying, open the ArgoCD UI. You should see `demo-app` appear, turn green
 
 ## Demonstrating GitOps
 
-### Demo 1 — Image tag update (the main GitOps demo)
+### Demo 1 - Image tag update (the main GitOps demo)
 
 Edit `k8s/deployment.yaml` in GitHub. Change:
 
@@ -236,7 +236,7 @@ Watch pods cycle in real time:
 kubectl get pods -w
 ```
 
-Old pods terminate, new ones start — triggered entirely by a Git commit.
+Old pods terminate, new ones start , triggered entirely by a Git commit.
 
 ---
 
@@ -254,7 +254,7 @@ Watch ArgoCD detect the drift and correct it:
 kubectl get application demo-app -n argocd -w
 ```
 
-You'll see: `Synced` → `OutOfSync` → `Synced` within ~15 seconds. The replica count returns to 2 — what Git says — automatically.
+You'll see: `Synced` → `OutOfSync` → `Synced` within ~15 seconds. The replica count returns to 2, what Git says, automatically.
 
 This is `selfHeal: true` making the cluster self-correcting.
 
@@ -266,7 +266,7 @@ Real-world debugging log from the actual setup of this project.
 
 ---
 
-### Error 1 — `argocd-applicationset-controller` CrashLoopBackOff
+### Error 1 - `argocd-applicationset-controller` CrashLoopBackOff
 
 **Symptom:**
 ```
@@ -274,7 +274,7 @@ argocd-applicationset-controller   0/1   CrashLoopBackOff   5 (17s ago)   19m
 ```
 
 **Root cause:**  
-The ApplicationSet CRD was not registered in the cluster when the controller started. The controller looked for its CRD, couldn't find it, retried every 10 seconds for 2 minutes, then crashed — repeating on a loop.
+The ApplicationSet CRD was not registered in the cluster when the controller started. The controller looked for its CRD, couldn't find it, retried every 10 seconds for 2 minutes, then crashed , repeating on a loop.
 
 **Fix:**  
 Apply the missing CRD using server-side apply (standard apply exceeds the 262KB annotation limit on this manifest):
@@ -287,7 +287,7 @@ kubectl apply --server-side -f https://raw.githubusercontent.com/argoproj/argo-c
 
 ---
 
-### Error 2 — ArgoCD can't reach GitHub (DNS resolution failure)
+### Error 2 - ArgoCD can't reach GitHub (DNS resolution failure)
 
 **Symptom:**
 ```
@@ -324,7 +324,7 @@ kubectl rollout restart deployment coredns -n kube-system
 ### Error 3 — Port-forward drops silently
 
 **Symptom:**  
-`curl: (7) Failed to connect to localhost port 8080` — the ArgoCD UI becomes unreachable mid-session.
+`curl: (7) Failed to connect to localhost port 8080` - the ArgoCD UI becomes unreachable mid-session.
 
 **Root cause:**  
 `kubectl port-forward` is a foreground process. It dies when the terminal closes, goes idle, or loses focus.
@@ -343,7 +343,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 ## Key Concepts
 
 **GitOps vs CI/CD**  
-CI/CD pipelines push changes to the cluster — the pipeline holds credentials and reaches out to deploy. GitOps flips this: a controller inside the cluster pulls changes from Git. No external system ever touches the cluster directly.
+CI/CD pipelines push changes to the cluster , the pipeline holds credentials and reaches out to deploy. GitOps flips this: a controller inside the cluster pulls changes from Git. No external system ever touches the cluster directly.
 
 **Drift detection**  
 ArgoCD polls Git every 3 minutes. If the cluster state doesn't match Git, it marks the app `OutOfSync` and syncs automatically (when `automated` sync policy is set).
